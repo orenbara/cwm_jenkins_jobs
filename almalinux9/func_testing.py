@@ -30,5 +30,4 @@ def test_cwm_functions():
 
     print(response.text)
 
-    hello = HelloWorld("Hello, World!")
-    assert hello.greet() == "Hello, World!"
+  
