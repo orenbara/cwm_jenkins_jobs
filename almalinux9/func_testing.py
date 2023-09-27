@@ -4,9 +4,9 @@ class HelloWorld:
         self.message = message
 
     def greet(self):
-        print(self.message)
+        return self.message
 
 
-if __name__ == "__main__":
+def test_hello_world():
     hello = HelloWorld("Hello, World!")
-    hello.greet()
+    assert hello.greet() == "Hello, World!"
