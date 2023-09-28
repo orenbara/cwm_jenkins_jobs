@@ -40,3 +40,23 @@ class TestFuncTesting:
         response_content = response.json()
         if isinstance(response_content, dict):  # Check if the response is a dictionary
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+
+
+    def test_cwm_resize_disk(self):
+        import requests
+
+        url = f"https://{self.cwm_url}/service/server/{serverId}/disk"
+
+        payload = "{\"size\":\"20\",\"index\":\"0\",\"provision\":\"1\"}"
+        headers = {
+        "Content-Type": "application/json"
+        }
+        response = requests.request("PUT", url, headers=headers, data=payload)
+
+        print(response.text)
+
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
