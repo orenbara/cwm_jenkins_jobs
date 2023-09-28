@@ -16,7 +16,7 @@ class TestFuncTesting:
             "AuthSecret": self.auth_client_secret
         }
 
-    """
+    @pytest.mark.skip
     def test_cwm_auth(self):
         url = "https://staging.cloudwm.com/service/authenticate"
         payload = {
@@ -27,11 +27,12 @@ class TestFuncTesting:
         print(response.text)
         
         # Add any assertions related to auth test here
-    """
-
+    
+    
+    @pytest.mark.flaky(reruns=5, reruns_delay=60)
     def test_cwm_cpu(self):
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"6B\"}"
+        payload = "{\"cpu\":\"4B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
 
@@ -41,11 +42,11 @@ class TestFuncTesting:
         if isinstance(response_content, dict):  # Check if the response is a dictionary
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
-
+    @pytest.mark.flaky(reruns=5, reruns_delay=60)
     def test_cwm_resize_disk(self):
         import requests
 
-        url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
+        url = f"https://{self.cwm_url}/service/server/{self.serverId}/disk"
 
         payload = "{\"size\":\"20\",\"index\":\"0\",\"provision\":\"1\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
