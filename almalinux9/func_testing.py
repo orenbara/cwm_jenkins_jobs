@@ -82,7 +82,7 @@ class TestFuncTesting:
             assert False
     
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"2B\"}"
+        payload = "{\"cpu\":\"4B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -98,7 +98,7 @@ class TestFuncTesting:
             assert False
             
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-        payload = "{\"size\":\"40\",\"index\":\"0\",\"provision\":1}"
+        payload = "{\"size\":\"50\",\"index\":\"0\",\"provision\":1}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -107,5 +107,29 @@ class TestFuncTesting:
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
 
+    @pytest.mark.skip
+    def test_cwm_add_ip(self):
+        '''
+        currently network testing is problematic in CWM, there is no api direct support and i dont understand the part after id in the api request:
+        https://staging.cloudwm.com/svc/server/564d233e-0ee8-b994-9a59-1caaaac41919/nics/00%3A50%3A56%3A02%3Aa7%3A57/ip
+        '''
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+
     
     
+    @pytest.mark.flaky(reruns=3, reruns_delay=30)
+    def test_cwm_add_disk(self):
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+        url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
+
+        payload = "{\"size\": 10,\"provision\": 1}"
+        response = requests.request("post", url, headers=self.cwm_headers, data=payload)
+        print(response.text)
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
