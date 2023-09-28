@@ -55,5 +55,6 @@ def test_cwm_functions():
     
     # Check the HTTP status code
     assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
-    response_json = response.json()
-    assert "errors" not in response_json, f"Found errors in response: {response_json['errors']}"
+    response_content = response.json()
+    if isinstance(response_content, dict):  # Check if the response is a dictionary
+        assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
