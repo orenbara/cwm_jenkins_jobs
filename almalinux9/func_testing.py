@@ -12,7 +12,7 @@ class FuncTesting:
         self.server_id = server_id
         self.cwm_url = cwm_url
     
-    def cwm_auth(self):
+    def test_cwm_auth(self):
         # Fetching values from Jenkins environment variables
         client_id = os.environ.get('clientId')
         secret_key = os.environ.get('secret')
@@ -27,17 +27,17 @@ class FuncTesting:
         response = requests.request("POST", url, headers=self.cwm_headers, json=payload)
         print(response.text)
     
-    def cwm_cpu(self):
+    def test_cwm_cpu(self):
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
 
-        payload = "{\"cpu\":\"4B\"}"
+        payload = "{\"cpu\":\"2B\"}"
         
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         
         print(response.text)
         return response
         
-def test_cwm_functions():
+def cwm_functions():
     # variables:
     server_id = os.environ.get('serverId')
     auth_client_id = os.environ.get('clientId')
@@ -47,11 +47,11 @@ def test_cwm_functions():
     tester = FuncTesting(server_id,auth_client_id ,auth_client_secret, cwm_url)
     
     # Authenticate test to CWM:        
-    #tester.cwm_auth()
+    #tester.test_cwm_auth()
     
     
     ################ Test CPU ################
-    response = tester.cwm_cpu()
+    response = tester.test_cwm_cpu()
     
     # Check the HTTP status code
     assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
