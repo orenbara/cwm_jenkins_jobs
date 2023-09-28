@@ -32,7 +32,7 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=60)
     def test_cwm_cpu(self):
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"4B\"}"
+        payload = "{\"cpu\":\"6B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
 
@@ -42,7 +42,7 @@ class TestFuncTesting:
         if isinstance(response_content, dict):  # Check if the response is a dictionary
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
-    @pytest.mark.flaky(reruns=5, reruns_delay=60)
+    @pytest.mark.flaky(reruns=3, reruns_delay=30)
     def test_cwm_resize_disk(self):
         import requests
 
