@@ -30,7 +30,7 @@ class FuncTesting:
     def cwm_cpu(self):
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
 
-        payload = "{\"cpu\":\"4B\"}"
+        payload = "{\"cpu\":\"2B\"}"
         
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         
@@ -49,5 +49,11 @@ def test_cwm_functions():
     # Authenticate test to CWM:        
     #tester.cwm_auth()
     
-    # Test change cpu
-    tester.cwm_cpu()
+    
+    ################ Test CPU ################
+    response = tester.cwm_cpu()
+    
+    # Check the HTTP status code
+    assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+    response_json = response.json()
+    assert "errors" not in response_json, f"Found errors in response: {response_json['errors']}"
