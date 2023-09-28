@@ -3,6 +3,12 @@ import requests
 
 class FuncTesting:
 
+    self.cwm_headers = {
+            "AuthClientId": os.environ.get('clientId'),
+            "AuthSecret": os.environ.get('secret'),
+            "content-type": "application/json"
+    }
+
     def greet(self):
         return self.message
     
@@ -18,11 +24,8 @@ class FuncTesting:
             "secret": secret_key
         }
 
-        headers = {
-          "Content-Type": "application/json"
-        }
         
-        response = requests.request("POST", url, headers=headers, json=payload)
+        response = requests.request("POST", url, headers=self.headers, json=payload)
         print(response.text)
     
     def cwm_cpu(self, serverId: str):
@@ -30,10 +33,7 @@ class FuncTesting:
 
         cpu_value = "4B"  # You'd need to define this
         payload = {"cpu": cpu_value}
-        headers = {
-          "content-type": "application/json"
-        }
-        response = requests.request("PUT", url, headers=headers, json=payload)
+        response = requests.request("PUT", url, headers=self.headers, json=payload)
         
         print(response.text)
         return response
@@ -43,7 +43,8 @@ def test_cwm_functions():
     server_id = os.environ.get('serverId')
     
     tester = FuncTesting()
-    # Authenticate to CWM:        
+    
+    # Authenticate test to CWM:        
     tester.cwm_auth()
     
     # Test change cpu
