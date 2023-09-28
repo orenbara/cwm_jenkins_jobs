@@ -82,7 +82,7 @@ class TestFuncTesting:
             assert False
     
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"6B\"}"
+        payload = "{\"cpu\":\"2B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -98,7 +98,7 @@ class TestFuncTesting:
             assert False
             
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-        payload = "{\"size\":\"30\",\"index\":\"0\",\"provision\":1}"
+        payload = "{\"size\":\"40\",\"index\":\"0\",\"provision\":1}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
