@@ -62,6 +62,7 @@ class TestFuncTesting:
             "AuthClientId": self.auth_client_id,
             "AuthSecret": self.auth_client_secret
         }
+        self.new_pass = os.environ.get('new_pass')
 
 
     @pytest.mark.skip
@@ -84,7 +85,7 @@ class TestFuncTesting:
             assert False
 
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"2D\"}"
+        payload = "{\"cpu\":\"4B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -100,7 +101,7 @@ class TestFuncTesting:
             assert False
             
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-        payload = "{\"size\":\"60\",\"index\":\"0\",\"provision\":1}"
+        payload = "{\"size\":\"70\",\"index\":\"0\",\"provision\":1}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -145,6 +146,21 @@ class TestFuncTesting:
         url = f"https://staging.cloudwm.com/service/server/{self.server_id}/disk/remove"
         payload = "{\"index\": 1,\"confirm\": 1}"
         response = requests.request("delete", url, headers=self.cwm_headers, data=payload)
+        print(response.text)
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+
+
+    @pytest.mark.flaky(reruns=3, reruns_delay=30)
+    def test_cwm_pass_change(self):
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+        url = f"https://staging.cloudwm.com/service/server/{self.server_id}/password"
+        payload = f"{{\"password\":\"{self.new_pass}\"}}"
+        response = requests.request("put", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
         response_content = response.json()
