@@ -31,7 +31,7 @@ class TestFuncTesting:
 
     def test_cwm_cpu(self):
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"4B\"}"
+        payload = "{\"cpu\":\"6B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
 
@@ -45,13 +45,10 @@ class TestFuncTesting:
     def test_cwm_resize_disk(self):
         import requests
 
-        url = f"https://{self.cwm_url}/service/server/{serverId}/disk"
+        url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
 
         payload = "{\"size\":\"20\",\"index\":\"0\",\"provision\":\"1\"}"
-        headers = {
-        "Content-Type": "application/json"
-        }
-        response = requests.request("PUT", url, headers=headers, data=payload)
+        response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
 
         print(response.text)
 
