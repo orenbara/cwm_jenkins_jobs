@@ -30,6 +30,7 @@ class TestFuncTesting:
                 snapshot_problem = 0
                 break
             else:
+                print("Found as snapshot - trying to delete")
                 # id of snapshot was captured
                 url = f"https://{self.cwm_url}/service/server/{self.server_id}/snapshot"
                 payload = f'{{"snapshotId":{snapshot_id}}}'
@@ -40,6 +41,7 @@ class TestFuncTesting:
                     assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
                     time.sleep(10)
                 else:
+                    print("SUCCESFULY deleted the snapshot")
                     snapshot_problem = 0
                     break  
         if snapshot_problem != 0:
@@ -80,7 +82,7 @@ class TestFuncTesting:
         if self.delete_snapshot() == False:
             print("Problem with snapshot")
             assert False
-    
+
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
         payload = "{\"cpu\":\"4B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
@@ -128,6 +130,21 @@ class TestFuncTesting:
 
         payload = "{\"size\": 10,\"provision\": 1}"
         response = requests.request("post", url, headers=self.cwm_headers, data=payload)
+        print(response.text)
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+
+
+    @pytest.mark.flaky(reruns=3, reruns_delay=30)
+    def test_cwm_remove_disk(self):
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+        url = f"https://staging.cloudwm.com/service/server/{self.server_id}/disk/remove"
+        payload = "{\"index\": 1,\"confirm\": 1}"
+        response = requests.request("delete", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
         response_content = response.json()
