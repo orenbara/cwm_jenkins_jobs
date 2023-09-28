@@ -37,7 +37,7 @@ class FuncTesting:
         print(response.text)
         return response
         
-def cwm_functions():
+def test_cwm_functions():
     # variables:
     server_id = os.environ.get('serverId')
     auth_client_id = os.environ.get('clientId')
