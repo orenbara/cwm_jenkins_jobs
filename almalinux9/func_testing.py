@@ -3,14 +3,13 @@ import requests
 
 class FuncTesting:
 
-    self.cwm_headers = {
-            "AuthClientId": os.environ.get('clientId'),
-            "AuthSecret": os.environ.get('secret'),
+    def __init__(self, server_id, auth_client_id,auth_client_secret):
+        self.cwm_headers = {
+            "AuthClientId": auth_client_id,
+            "AuthSecret": auth_client_secret,
             "content-type": "application/json"
-    }
-
-    def greet(self):
-        return self.message
+        }
+        self.server_id = server_id
     
     def cwm_auth(self):
         # Fetching values from Jenkins environment variables
@@ -24,16 +23,15 @@ class FuncTesting:
             "secret": secret_key
         }
 
-        
-        response = requests.request("POST", url, headers=self.headers, json=payload)
+        response = requests.request("POST", url, headers=self.cwm_headers, json=payload)
         print(response.text)
     
-    def cwm_cpu(self, serverId: str):
-        url = f"https://staging.cloudwm.com/service/server/{serverId}/cpu"
+    def cwm_cpu(self):
+        url = f"https://staging.cloudwm.com/service/server/{self.server_id}/cpu"
 
         cpu_value = "4B"  # You'd need to define this
         payload = {"cpu": cpu_value}
-        response = requests.request("PUT", url, headers=self.headers, json=payload)
+        response = requests.request("PUT", url, headers=self.cwm_headers, json=payload)
         
         print(response.text)
         return response
@@ -41,11 +39,13 @@ class FuncTesting:
 def test_cwm_functions():
     # variables:
     server_id = os.environ.get('serverId')
-    
-    tester = FuncTesting()
+    auth_client_id = os.environ.get('clientId')
+    auth_client_secret = os.environ.get('secret')
+
+    tester = FuncTesting(server_id,auth_client_id ,auth_client_secret)
     
     # Authenticate test to CWM:        
     tester.cwm_auth()
     
     # Test change cpu
-    tester.cwm_cpu(server_id)
+    tester.cwm_cpu()
