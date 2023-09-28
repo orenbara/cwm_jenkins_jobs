@@ -44,9 +44,7 @@ class TestFuncTesting:
 
     @pytest.mark.flaky(reruns=3, reruns_delay=30)
     def test_cwm_resize_disk(self):
-        import requests
-
-        url = f"https://{self.cwm_url}/service/server/{self.serverId}/disk"
+        url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
 
         payload = "{\"size\":\"20\",\"index\":\"0\",\"provision\":\"1\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
