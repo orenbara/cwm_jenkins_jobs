@@ -85,7 +85,7 @@ class TestFuncTesting:
             assert False
 
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"2D\"}"
+        payload = "{\"cpu\":\"2B\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -100,7 +100,7 @@ class TestFuncTesting:
             print("Problem with snapshot")
             assert False
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-        payload = "{\"ram\":\"2048\"}"
+        payload = "{\"ram\":\"4096\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -116,7 +116,7 @@ class TestFuncTesting:
             assert False
             
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-        payload = "{\"size\":\"80\",\"index\":\"0\",\"provision\":1}"
+        payload = "{\"size\":\"100\",\"index\":\"0\",\"provision\":1}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -173,7 +173,7 @@ class TestFuncTesting:
         if self.delete_snapshot() == False:
             print("Problem with snapshot")
             assert False
-        url = "https://staging.cloudwm.com/service/server/{self.server_id}/snapshot"
+        url = f"https://staging.cloudwm.com/service/server/{self.server_id}/snapshot"
         payload = "{\"name\":\"jenkins_test_snapshot\"}"
         response = requests.request("POST", url, headers=self.cwm_headers, data=payload)
         print(response.text)
