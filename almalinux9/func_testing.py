@@ -97,17 +97,17 @@ class TestFuncTesting:
 
     @pytest.mark.flaky(reruns=3, reruns_delay=30)
     def test_cwm_ram(self):
-    if self.delete_snapshot() == False:
-        print("Problem with snapshot")
-        assert False
-    url = f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-    payload = "{\"ram\":\"4096\"}"
-    response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
-    print(response.text)
-    assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
-    response_content = response.json()
-    if isinstance(response_content, dict):  # Check if the response is a dictionary
-        assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+        url = f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
+        payload = "{\"ram\":\"4096\"}"
+        response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
+        print(response.text)
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
 
     @pytest.mark.flaky(reruns=3, reruns_delay=30)
@@ -190,9 +190,11 @@ class TestFuncTesting:
     def test_cwm_remove_snapshot(self):
         url = "https://staging.cloudwm.com/service/server/{self.server_id}/snapshot"
         payload = "{{\"snapshotId\": {self.cwm_snapshot_id}}}"
-        response = requests.request("DELETE", url, headers=headers, data=payload)
+        response = requests.request("POST", url, headers=self.cwm_headers, data=payload)
         print(response.text)
-                if isinstance(response_content, dict):  # Check if the response is a dictionary
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
             
