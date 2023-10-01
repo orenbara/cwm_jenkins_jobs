@@ -30,7 +30,7 @@ class TestFuncTesting:
                 snapshot_problem = 0
                 break
             else:
-                print("Found as snapshot - trying to delete")
+                print("Found a snapshot - trying to delete")
                 # id of snapshot was captured
                 url = f"https://{self.cwm_url}/service/server/{self.server_id}/snapshot"
                 payload = f'{{"snapshotId":{snapshot_id}}}'
@@ -63,7 +63,6 @@ class TestFuncTesting:
             "AuthSecret": self.auth_client_secret
         }
         self.new_pass = os.environ.get('new_pass')
-        self.cwm_snapshot_id = ""
 
 
     @pytest.mark.skip
@@ -86,7 +85,7 @@ class TestFuncTesting:
             assert False
 
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-        payload = "{\"cpu\":\"4B\"}"
+        payload = "{\"cpu\":\"2D\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -101,7 +100,7 @@ class TestFuncTesting:
             print("Problem with snapshot")
             assert False
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-        payload = "{\"ram\":\"4096\"}"
+        payload = "{\"ram\":\"2048\"}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -117,7 +116,7 @@ class TestFuncTesting:
             assert False
             
         url = f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-        payload = "{\"size\":\"70\",\"index\":\"0\",\"provision\":1}"
+        payload = "{\"size\":\"80\",\"index\":\"0\",\"provision\":1}"
         response = requests.request("PUT", url, headers=self.cwm_headers, data=payload)
         print(response.text)
         assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
@@ -183,19 +182,10 @@ class TestFuncTesting:
         if isinstance(response_content, dict):  # Check if the response is a dictionary
             assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
-        self.cwm_snapshot_id = response_content['snapshotId']
-        print(f"CWM created a snapshot during tests, id is: {self.cwm_snapshot_id}")
 
     @pytest.mark.flaky(reruns=3, reruns_delay=30)
     def test_cwm_remove_snapshot(self):
-        url = "https://staging.cloudwm.com/service/server/{self.server_id}/snapshot"
-        payload = "{{\"snapshotId\": {self.cwm_snapshot_id}}}"
-        response = requests.request("POST", url, headers=self.cwm_headers, data=payload)
-        print(response.text)
-        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
-        response_content = response.json()
-        if isinstance(response_content, dict):  # Check if the response is a dictionary
-            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+        self.delete_snapshot()
 
             
 
