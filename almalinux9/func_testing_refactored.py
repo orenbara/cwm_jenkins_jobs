@@ -158,6 +158,11 @@ class TestFuncTesting:
     def test_cwm_billing_change(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/billing"
                  , payload = "{\"type\":\"hourly\", \"traffic\":\"\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
+
+    @pytest.mark.flaky(reruns=10, reruns_delay=5)
+    def test_cwm_rename(self):
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/rename"
+                 , payload = "{\"name\":\"testing.devops.oren.changed_name\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
         
     @pytest.mark.flaky(reruns=10, reruns_delay=5)
     def test_cwm_power_off(self):
