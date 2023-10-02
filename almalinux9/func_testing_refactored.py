@@ -97,20 +97,20 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=15)
     def test_cwm_cpu(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-                         , payload="{\"cpu\":\"2B\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"cpu\":\"2D\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=10)
     def test_cwm_ram(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-                         , payload="{\"ram\":\"2048\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"ram\":\"4096\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_cwm_resize_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                         , payload="{\"size\":\"40\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
+                         , payload="{\"size\":\"50\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
                          cwm_headers=self.cwm_headers)
 
 
@@ -157,7 +157,7 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=10, reruns_delay=20)
     def test_cwm_billing_change(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/billing"
-                 , payload="{\"type\":\"hourly\", \"\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
+                 , payload = "{\"type\":\"hourly\", \"traffic\":\"\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
         
     @pytest.mark.flaky(reruns=10, reruns_delay=5)
     def test_cwm_power_off(self):
