@@ -9,6 +9,7 @@ class TestFuncTesting:
 
  # Utility Functions:
     def get_snapshot_id(self):
+        print("****************** get_snapshots ****************")
         url = f"https://staging.cloudwm.com/service/server/{self.server_id}/snapshots"
         response = requests.request("GET", url, headers=self.cwm_headers)
         print(response.text)
@@ -96,20 +97,20 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=15)
     def test_cwm_cpu(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-                         , payload="{\"cpu\":\"2D\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"cpu\":\"2B\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=10)
     def test_cwm_ram(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-                         , payload="{\"ram\":\"4096\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"ram\":\"2048\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_cwm_resize_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                         , payload="{\"size\":\"30\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
+                         , payload="{\"size\":\"40\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
                          cwm_headers=self.cwm_headers)
 
 
@@ -132,13 +133,13 @@ class TestFuncTesting:
 
     @pytest.mark.flaky(reruns=6, reruns_delay=15)
     def test_cwm_remove_disk(self):
-        self.execute_cwm_func(url=f"https://staging.cloudwm.com/service/server/{self.server_id}/disk/remove"
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk/remove"
                  , payload="{\"index\": 1,\"confirm\": 1}" , http_func="DELETE", cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.flaky(reruns=6, reruns_delay=15)
     def test_cwm_add_snapshot(self):
-        self.execute_cwm_func(url=f"https://staging.cloudwm.com/service/server/{self.server_id}/snapshot"
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/snapshot"
                  , payload="{\"name\":\"jenkins_test_snapshot\"}" , http_func="POST", cwm_headers=self.cwm_headers)
         
 
@@ -147,8 +148,29 @@ class TestFuncTesting:
         self.delete_snapshot()
 
             
-
     @pytest.mark.flaky(reruns=6, reruns_delay=5)
     def test_cwm_pass_change(self):
-        self.execute_cwm_func(url=f"https://staging.cloudwm.com/service/server/{self.server_id}/password"
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/password"
                  , payload=f"{{\"password\":\"{self.new_pass}\"}}" , http_func="PUT", cwm_headers=self.cwm_headers)
+        
+        
+    @pytest.mark.flaky(reruns=6, reruns_delay=5)
+    def test_cwm_billing_change(self):
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/billing"
+                 , payload="{\"type\":\"hourly\", \"\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
+        
+    @pytest.mark.flaky(reruns=10, reruns_delay=5)
+    def test_cwm_power_off(self):
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/power"
+                 , payload="{\"power\":\"off\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
+        
+    @pytest.mark.flaky(reruns=10, reruns_delay=5)
+    def test_cwm_power_on(self):
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/power"
+                 , payload="{\"power\":\"on\"}" , http_func="PUT", cwm_headers=self.cwm_headers)
+        
+    @pytest.mark.flaky(reruns=10, reruns_delay=5)
+    def test_cwm_clone(self):
+        self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/clone"
+                 , payload="f{{\"source\":\"{self.server_id}\",\"password\":\"{self.new_pass}\",\"billing\":\"hourly\"}}" , http_func="POST", cwm_headers=self.cwm_headers)
+
