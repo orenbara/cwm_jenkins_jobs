@@ -14,7 +14,7 @@ class TestFuncTesting:
         print(response.text)
         parsed_response = json.loads(response.text)
         if len(parsed_response) == 0:
-            print("The response is empty - no snapshots")
+            print("[Function - get_snapshot_id]:The response is empty - no snapshots")
             return -1
         else:
             id_value = parsed_response[0]['id']
@@ -96,20 +96,20 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=15)
     def test_cwm_cpu(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/cpu"
-                         , payload="{\"cpu\":\"2B\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"cpu\":\"2D\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=10)
     def test_cwm_ram(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/ram"
-                         , payload="{\"ram\":\"2048\"}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"ram\":\"4096\"}", http_func="PUT", cwm_headers=self.cwm_headers)
 
 
 
     @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_cwm_resize_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                         , payload="{\"size\":\"20\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
+                         , payload="{\"size\":\"30\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
                          cwm_headers=self.cwm_headers)
 
 
@@ -127,8 +127,7 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=6, reruns_delay=20)
     def test_cwm_add_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                 , payload="{\"size\": 10,\"provision\": 1}", http_func="POST",cwm_headers=self.cwm_headers,
-                 json=False)
+                 , payload="{\"size\": 10,\"provision\": 1}", http_func="POST",cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.flaky(reruns=6, reruns_delay=15)

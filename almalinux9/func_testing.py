@@ -65,6 +65,19 @@ class TestFuncTesting:
         self.new_pass = os.environ.get('new_pass')
 
 
+    def execute_cwm_func(url, payload, http_func):
+        if self.delete_snapshot() == False:
+            print("Problem with snapshot")
+            assert False
+        response = requests.request(http_func , url, headers=self.cwm_headers, json=payload)
+        print(response.text)
+        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+        response_content = response.json()
+        if isinstance(response_content, dict):  # Check if the response is a dictionary
+            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+
+
+
     @pytest.mark.skip
     def test_cwm_auth(self):
         url = "https://staging.cloudwm.com/service/authenticate"
