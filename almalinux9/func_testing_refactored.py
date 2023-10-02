@@ -50,15 +50,16 @@ class TestFuncTesting:
             return True
         
     def execute_cwm_func(self, url, payload, http_func, cwm_headers):
-        if self.delete_snapshot() == False:
-            print("Problem with snapshot")
-            assert False
-        response = requests.request(http_func , url, headers=cwm_headers, json=payload)
-        print(response.text)
-        assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
-        response_content = response.json()
-        if isinstance(response_content, dict):  # Check if the response is a dictionary
-            assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
+      print(f"[EXECUTION_FUNC]:\nURL: {url}\nPAYLOAD: {payload}\nHTTP_FUNC: {http_func}")
+      if self.delete_snapshot() == False:
+          print("Problem with snapshot")
+          assert False
+      response = requests.request(http_func , url, headers=cwm_headers, json=payload)
+      print(response.text)
+      assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
+      response_content = response.json()
+      if isinstance(response_content, dict):  # Check if the response is a dictionary
+          assert "errors" not in response_content, f"Found errors in response: {response_content['errors']}"
 
 ################# TESTS ###############
     @pytest.fixture(autouse=True)
