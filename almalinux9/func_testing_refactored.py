@@ -50,11 +50,13 @@ class TestFuncTesting:
             return True
         
     def execute_cwm_func(self, url, payload, http_func, cwm_headers):
+      # json boolean variable here will defind the payload type (jaso\data)
       print(f"[EXECUTION_FUNC]:\nURL: {url}\nPAYLOAD: {payload}\nHTTP_FUNC: {http_func}")
       if self.delete_snapshot() == False:
           print("Problem with snapshot")
           assert False
-      response = requests.request(http_func , url, headers=cwm_headers, json=payload)
+      response = requests.request(http_func , url, headers=cwm_headers, data=payload)
+      
       print(response.text)
       assert 200 <= response.status_code < 300, f"Expected success status code, got {response.status_code}"
       response_content = response.json()
@@ -89,7 +91,6 @@ class TestFuncTesting:
         response = requests.request("POST", url, headers=self.cwm_headers, json=payload)
         print(response.text)
         
-        # Add any assertions related to auth test here
     
     
     @pytest.mark.flaky(reruns=5, reruns_delay=15)
@@ -108,7 +109,8 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_cwm_resize_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                         , payload="{\"size\":\"20\",\"index\":\"0\",\"provision\":1}", http_func="PUT", cwm_headers=self.cwm_headers)
+                         , payload="{\"size\":\"20\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
+                         cwm_headers=self.cwm_headers)
 
 
     @pytest.mark.skip
@@ -125,7 +127,8 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=6, reruns_delay=20)
     def test_cwm_add_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                 , payload="{\"size\": 10,\"provision\": 1}", http_func="POST", cwm_headers=self.cwm_headers)
+                 , payload="{\"size\": 10,\"provision\": 1}", http_func="POST",cwm_headers=self.cwm_headers,
+                 json=False)
 
 
     @pytest.mark.flaky(reruns=6, reruns_delay=15)
