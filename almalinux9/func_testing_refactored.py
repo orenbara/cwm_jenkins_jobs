@@ -110,7 +110,7 @@ class TestFuncTesting:
     @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_cwm_resize_disk(self):
         self.execute_cwm_func(url=f"https://{self.cwm_url}/service/server/{self.server_id}/disk"
-                         , payload="{\"size\":\"50\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
+                         , payload="{\"size\":\"60\",\"index\":\"0\",\"provision\":1}", http_func="PUT",
                          cwm_headers=self.cwm_headers)
 
 
